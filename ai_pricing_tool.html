@@ -1,28 +1,233 @@
-<script>
-function num(id){
-return parseFloat(document.getElementById(id).value)||0;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Pricing</title>
+
+<style>
+*{box-sizing:border-box;}
+
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto;
+background:#f4f6fb;
 }
 
-function calc(){
+/* container */
+.container{
+max-width:420px;
+margin:auto;
+padding:16px;
+}
 
-try{
+/* card */
+.card{
+background:#fff;
+border-radius:20px;
+padding:18px;
+box-shadow:0 10px 25px rgba(0,0,0,0.06);
+animation:fadeUp 0.5s ease;
+}
+
+/* header */
+.header{
+display:flex;
+align-items:center;
+gap:10px;
+margin-bottom:10px;
+}
+
+/* AI logo */
+.ai-logo{
+width:36px;
+height:36px;
+border-radius:12px;
+background:linear-gradient(135deg,#6366f1,#4f46e5);
+display:flex;
+align-items:center;
+justify-content:center;
+color:#fff;
+font-weight:bold;
+animation:pulse 2s infinite;
+}
+
+h2{margin:0;font-size:18px;}
+.sub{font-size:12px;color:#777;margin-bottom:10px;}
+
+label{
+font-size:12px;
+font-weight:600;
+margin-top:10px;
+display:block;
+}
+
+input,select{
+width:100%;
+padding:12px;
+border-radius:12px;
+border:1px solid #e5e7eb;
+margin-top:5px;
+background:#fafafa;
+font-size:14px;
+transition:all 0.2s;
+}
+
+input:focus,select:focus{
+border-color:#6366f1;
+background:#fff;
+transform:scale(1.01);
+}
+
+/* row */
+.row{
+display:flex;
+gap:10px;
+}
+
+/* button */
+button{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:none;
+margin-top:14px;
+font-weight:600;
+font-size:14px;
+cursor:pointer;
+transition:all 0.2s;
+}
+
+.primary{
+background:#111;
+color:#fff;
+}
+
+.primary:active{
+transform:scale(0.97);
+}
+
+/* result */
+.result{
+margin-top:15px;
+animation:fadeUp 0.4s ease;
+}
+
+/* cards */
+.box{
+background:#f9fafb;
+padding:12px;
+border-radius:12px;
+margin-top:10px;
+transition:all 0.2s;
+}
+
+.box:hover{
+transform:translateY(-2px);
+}
+
+.best{
+border:2px solid #6366f1;
+background:#fff;
+}
+
+.small{font-size:12px;color:#666;}
+.price{font-size:18px;font-weight:bold;}
+
+.footer{
+text-align:center;
+font-size:11px;
+color:#888;
+margin-top:12px;
+}
+
+/* animations */
+@keyframes fadeUp{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes pulse{
+0%{transform:scale(1);}
+50%{transform:scale(1.05);}
+100%{transform:scale(1);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="card">
+
+<div class="header">
+<div class="ai-logo">AI</div>
+<div>
+<h2>AI Pricing</h2>
+<div class="sub">Smart logistics engine</div>
+</div>
+</div>
+
+<label>Route</label>
+<div class="row">
+<input id="origin" value="DXB">
+<input id="destination" value="SIN">
+</div>
+
+<label>Mode</label>
+<select id="mode">
+<option>Air</option>
+<option>Sea</option>
+</select>
+
+<div class="row">
+<div style="flex:1;">
+<label>Weight</label>
+<input id="weight" type="number" value="150">
+</div>
+<div style="flex:1;">
+<label>Volume</label>
+<input id="volume" type="number" value="2.5">
+</div>
+</div>
+
+<label>Lead Time</label>
+<input id="time" type="number" value="6">
+
+<button id="calcBtn" class="primary">Calculate</button>
+
+<div id="result" class="result"></div>
+
+<div class="footer">Created by Arun</div>
+
+</div>
+</div>
+
+<script>
+function num(id){
+var v=document.getElementById(id).value;
+if(v===""||isNaN(v)) return 0;
+return parseFloat(v);
+}
+
+document.getElementById("calcBtn").addEventListener("click", function(){
 
 var w=num("weight");
 var v=num("volume");
 var t=num("time");
 var m=document.getElementById("mode").value;
 
-var volumetric=v*167;
-var chargeable=Math.max(w,volumetric);
+var volumetric = v * 167;
+var chargeable = Math.max(w, volumetric);
 
-var rate=(m==="Air")?4.5:1.8;
-var freight=chargeable*rate;
+var rate = (m==="Air") ? 4.5 : 1.8;
+var freight = chargeable * rate;
 
-var fuel=freight*0.12;
-var handling=50;
-var urgency=(t<5)?freight*0.15:0;
+var fuel = freight * 0.12;
+var handling = 50;
+var urgency = (t < 5) ? freight * 0.15 : 0;
 
-var total=freight+fuel+handling+urgency;
+var total = freight + fuel + handling + urgency;
 
 var carriers=[
 {name:"DHL",total:total},
@@ -30,48 +235,24 @@ var carriers=[
 {name:"Qatar",total:total*1.05}
 ];
 
-carriers.sort(function(a,b){ return a.total-b.total; });
-
-var insight="";
-var confidence="";
-
-if(m==="Air" && t<5){
-insight="Air is recommended due to tight deadline.";
-confidence="High";
-}else if(m==="Sea" && chargeable>300){
-insight="Sea freight is more cost-efficient for heavy shipments.";
-confidence="High";
-}else{
-insight="Balanced option based on cost and time.";
-confidence="Medium";
-}
+carriers.sort(function(a,b){return a.total-b.total;});
 
 var html="";
 
-html += '<div class="ai-box">';
-html += '<div class="ai-title">AI Insight</div>';
-html += '<div class="ai-text">'+insight+'</div>';
-html += '<div class="ai-confidence">Confidence: '+confidence+'</div>';
-html += '</div>';
+html+="<div class='box'><div class='small'>Chargeable Weight</div><div class='price'>"+chargeable.toFixed(1)+" kg</div></div>";
 
-html += '<div class="result-card">';
-html += '<div class="result-title">AI Pricing Result</div>';
-html += '<div class="result-item">Chargeable: '+chargeable.toFixed(1)+' kg</div>';
+html+="<div class='box'>Freight: $"+freight.toFixed(2)+"<br>Fuel: $"+fuel.toFixed(2)+"<br>Handling: $"+handling+"<br>Urgency: $"+urgency.toFixed(2)+"</div>";
 
 for(var i=0;i<carriers.length;i++){
-html += '<div class="result-item '+(i===0?"best":"")+'">';
-html += carriers[i].name+' - $'+carriers[i].total.toFixed(2)+(i===0?' (Best)':'');
-html += '</div>';
+html+="<div class='box "+(i===0?"best":"")+"'><b>"+carriers[i].name+"</b><br><div class='price'>$"+carriers[i].total.toFixed(2)+"</div>";
+if(i===0){html+="<div class='small' style='color:green;'>Best Option</div>";}
+html+="</div>";
 }
-
-html += '</div>';
 
 document.getElementById("result").innerHTML=html;
 
-}catch(e){
-document.getElementById("result").innerHTML = "Error: "+e.message;
-console.log(e);
-}
-
-}
+});
 </script>
+
+</body>
+</html>
