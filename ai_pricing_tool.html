@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Pricing Premium Layout</title>
+<title>AI Pricing Premium</title>
 
 <style>
 *{box-sizing:border-box;}
@@ -203,7 +203,6 @@ var carriers=[
 
 carriers.sort((a,b)=>a.total-b.total);
 
-// AI Insight
 var insight="";
 var confidence="";
 
@@ -220,14 +219,12 @@ confidence="Medium";
 
 var html="";
 
-// AI Insight Card
 html+=`<div class="ai-box">
 <div class="ai-title">AI Insight</div>
 <div class="ai-text">${insight}</div>
 <div class="ai-confidence">Confidence: ${confidence}</div>
 </div>`;
 
-// RESULT CARD
 html+=`<div class="result-card">
 <div class="result-title">AI Pricing Result</div>
 <div class="result-item">Chargeable: ${chargeable.toFixed(1)} kg</div>`;
