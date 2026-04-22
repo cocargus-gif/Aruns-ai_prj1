@@ -162,4 +162,87 @@ margin-top:12px;
 <label>Lead Time</label>
 <input id="time" value="6">
 
-<button
+<button onclick="calc()">Calculate</button>
+
+<div id="result"></div>
+
+<div class="footer">Created by Arun</div>
+
+</div>
+</div>
+
+<script>
+function num(id){
+return parseFloat(document.getElementById(id).value)||0;
+}
+
+function calc(){
+
+var w=num("weight");
+var v=num("volume");
+var t=num("time");
+var m=document.getElementById("mode").value;
+
+var volumetric=v*167;
+var chargeable=Math.max(w,volumetric);
+
+var rate=(m==="Air")?4.5:1.8;
+var freight=chargeable*rate;
+
+var fuel=freight*0.12;
+var handling=50;
+var urgency=(t<5)?freight*0.15:0;
+
+var total=freight+fuel+handling+urgency;
+
+var carriers=[
+{name:"DHL",total:total},
+{name:"Emirates",total:total*0.95},
+{name:"Qatar",total:total*1.05}
+];
+
+carriers.sort((a,b)=>a.total-b.total);
+
+// AI Insight
+var insight="";
+var confidence="";
+
+if(m==="Air" && t<5){
+insight="Air is recommended due to tight deadline.";
+confidence="High";
+}else if(m==="Sea" && chargeable>300){
+insight="Sea freight is more cost-efficient for heavy shipments.";
+confidence="High";
+}else{
+insight="Balanced option based on cost and time.";
+confidence="Medium";
+}
+
+var html="";
+
+// AI Insight Card
+html+=`<div class="ai-box">
+<div class="ai-title">AI Insight</div>
+<div class="ai-text">${insight}</div>
+<div class="ai-confidence">Confidence: ${confidence}</div>
+</div>`;
+
+// RESULT CARD
+html+=`<div class="result-card">
+<div class="result-title">AI Pricing Result</div>
+<div class="result-item">Chargeable: ${chargeable.toFixed(1)} kg</div>`;
+
+for(let i=0;i<carriers.length;i++){
+html+=`<div class="result-item ${i===0?"best":""}">
+${carriers[i].name} - $${carriers[i].total.toFixed(2)} ${i===0?"(Best)":""}
+</div>`;
+}
+
+html+=`</div>`;
+
+document.getElementById("result").innerHTML=html;
+}
+</script>
+
+</body>
+</html>
