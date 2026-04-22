@@ -1,182 +1,11 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Pricing Premium</title>
-
-<style>
-*{box-sizing:border-box;}
-body{
-margin:0;
-font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto;
-background: radial-gradient(circle at top, #1a1a1a, #000);
-color:white;
-}
-
-.container{
-max-width:420px;
-margin:auto;
-padding:20px;
-}
-
-.card{
-position:relative;
-background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-border-radius:25px;
-padding:20px;
-box-shadow:0 0 25px rgba(255,120,0,0.1),0 15px 50px rgba(0,0,0,0.7);
-overflow:hidden;
-}
-
-.glow{
-position:absolute;
-width:220px;
-height:220px;
-background: radial-gradient(circle, rgba(255,120,0,0.4), transparent);
-filter: blur(70px);
-top:-60px;
-right:-60px;
-}
-
-h2{margin:0 0 10px;font-size:22px;}
-
-label{font-size:13px;color:#ccc;margin-top:12px;display:block;}
-
-input,select{
-width:100%;
-padding:14px;
-border-radius:14px;
-border:none;
-margin-top:6px;
-background:#111;
-color:white;
-font-size:15px;
-}
-
-.row{display:flex;gap:10px;}
-
-button{
-margin-top:18px;
-padding:16px;
-border-radius:20px;
-border:none;
-background:linear-gradient(135deg,#ff7a00,#ff3d00);
-color:white;
-font-weight:bold;
-width:100%;
-font-size:16px;
-}
-
-/* AI BOX */
-.ai-box{
-margin-top:15px;
-padding:16px;
-border-radius:18px;
-background: linear-gradient(135deg, rgba(255,120,0,0.15), rgba(255,60,0,0.08));
-border:1px solid rgba(255,120,0,0.3);
-}
-
-.ai-title{
-font-weight:bold;
-color:#ff7a00;
-margin-bottom:8px;
-font-size:14px;
-}
-
-.ai-title::before{
-content:"";
-display:inline-block;
-width:8px;
-height:8px;
-background:#ff7a00;
-border-radius:50%;
-margin-right:6px;
-}
-
-.ai-text{font-size:15px;color:#eee;margin-bottom:8px;}
-.ai-confidence{font-size:12px;color:#aaa;}
-
-/* RESULT CARD */
-.result-card{
-margin-top:15px;
-padding:16px;
-border-radius:18px;
-background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
-border:1px solid rgba(255,120,0,0.2);
-}
-
-.result-title{
-color:#ff7a00;
-font-weight:bold;
-margin-bottom:10px;
-font-size:14px;
-}
-
-.result-item{
-background:#111;
-padding:14px;
-border-radius:14px;
-margin-top:10px;
-font-size:16px;
-}
-
-.best{
-border:1px solid #ff7a00;
-}
-
-.footer{
-text-align:center;
-font-size:11px;
-color:#777;
-margin-top:12px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-<div class="card">
-<div class="glow"></div>
-
-<h2>AI Pricing</h2>
-
-<label>Mode</label>
-<select id="mode">
-<option>Air</option>
-<option>Sea</option>
-</select>
-
-<div class="row">
-<div style="flex:1;">
-<label>Weight</label>
-<input id="weight" value="150">
-</div>
-<div style="flex:1;">
-<label>Volume</label>
-<input id="volume" value="2.5">
-</div>
-</div>
-
-<label>Lead Time</label>
-<input id="time" value="6">
-
-<button onclick="calc()">Calculate</button>
-
-<div id="result"></div>
-
-<div class="footer">Created by Arun</div>
-
-</div>
-</div>
-
 <script>
 function num(id){
 return parseFloat(document.getElementById(id).value)||0;
 }
 
 function calc(){
+
+try{
 
 var w=num("weight");
 var v=num("volume");
@@ -201,7 +30,7 @@ var carriers=[
 {name:"Qatar",total:total*1.05}
 ];
 
-carriers.sort((a,b)=>a.total-b.total);
+carriers.sort(function(a,b){ return a.total-b.total; });
 
 var insight="";
 var confidence="";
@@ -219,27 +48,30 @@ confidence="Medium";
 
 var html="";
 
-html+=`<div class="ai-box">
-<div class="ai-title">AI Insight</div>
-<div class="ai-text">${insight}</div>
-<div class="ai-confidence">Confidence: ${confidence}</div>
-</div>`;
+html += '<div class="ai-box">';
+html += '<div class="ai-title">AI Insight</div>';
+html += '<div class="ai-text">'+insight+'</div>';
+html += '<div class="ai-confidence">Confidence: '+confidence+'</div>';
+html += '</div>';
 
-html+=`<div class="result-card">
-<div class="result-title">AI Pricing Result</div>
-<div class="result-item">Chargeable: ${chargeable.toFixed(1)} kg</div>`;
+html += '<div class="result-card">';
+html += '<div class="result-title">AI Pricing Result</div>';
+html += '<div class="result-item">Chargeable: '+chargeable.toFixed(1)+' kg</div>';
 
-for(let i=0;i<carriers.length;i++){
-html+=`<div class="result-item ${i===0?"best":""}">
-${carriers[i].name} - $${carriers[i].total.toFixed(2)} ${i===0?"(Best)":""}
-</div>`;
+for(var i=0;i<carriers.length;i++){
+html += '<div class="result-item '+(i===0?"best":"")+'">';
+html += carriers[i].name+' - $'+carriers[i].total.toFixed(2)+(i===0?' (Best)':'');
+html += '</div>';
 }
 
-html+=`</div>`;
+html += '</div>';
 
 document.getElementById("result").innerHTML=html;
+
+}catch(e){
+document.getElementById("result").innerHTML = "Error: "+e.message;
+console.log(e);
+}
+
 }
 </script>
-
-</body>
-</html>
