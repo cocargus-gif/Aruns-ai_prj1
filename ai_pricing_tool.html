@@ -1,43 +1,146 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Logistics Pricing</title>
+<title>AI Pricing Premium Layout</title>
+
 <style>
-body {margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#eef2ff,#f8fafc);}
-.container {max-width:420px;margin:auto;padding:20px;}
-.card {background:white;border-radius:18px;padding:20px;box-shadow:0 15px 30px rgba(0,0,0,0.08);}
-.header {text-align:center;margin-bottom:15px;}
-.header h2 {margin:0;}
-.header span {font-size:13px;color:#666;}
-label {font-size:13px;font-weight:600;margin-top:10px;display:block;}
-input, select {width:100%;padding:12px;border-radius:10px;border:1px solid #ddd;margin-top:5px;}
-button {margin-top:15px;padding:14px;width:100%;border:none;border-radius:12px;font-weight:bold;cursor:pointer;}
-.primary {background:linear-gradient(135deg,#6366f1,#4f46e5);color:white;}
-.swap {background:#f1f5f9;}
-.result {margin-top:20px;}
-.result-card {background:#f9fafb;padding:15px;border-radius:14px;margin-top:10px;}
-.best {border:2px solid #6366f1;}
-.ai-box {background:#eef2ff;padding:12px;border-radius:12px;margin-top:15px;font-size:13px;}
-.footer {text-align:center;font-size:12px;margin-top:15px;color:#777;}
+*{box-sizing:border-box;}
+body{
+margin:0;
+font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto;
+background: radial-gradient(circle at top, #1a1a1a, #000);
+color:white;
+}
+
+.container{
+max-width:420px;
+margin:auto;
+padding:20px;
+}
+
+.card{
+position:relative;
+background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+border-radius:25px;
+padding:20px;
+box-shadow:0 0 25px rgba(255,120,0,0.1),0 15px 50px rgba(0,0,0,0.7);
+overflow:hidden;
+}
+
+.glow{
+position:absolute;
+width:220px;
+height:220px;
+background: radial-gradient(circle, rgba(255,120,0,0.4), transparent);
+filter: blur(70px);
+top:-60px;
+right:-60px;
+}
+
+h2{margin:0 0 10px;font-size:22px;}
+
+label{font-size:13px;color:#ccc;margin-top:12px;display:block;}
+
+input,select{
+width:100%;
+padding:14px;
+border-radius:14px;
+border:none;
+margin-top:6px;
+background:#111;
+color:white;
+font-size:15px;
+}
+
+.row{display:flex;gap:10px;}
+
+button{
+margin-top:18px;
+padding:16px;
+border-radius:20px;
+border:none;
+background:linear-gradient(135deg,#ff7a00,#ff3d00);
+color:white;
+font-weight:bold;
+width:100%;
+font-size:16px;
+}
+
+/* AI BOX */
+.ai-box{
+margin-top:15px;
+padding:16px;
+border-radius:18px;
+background: linear-gradient(135deg, rgba(255,120,0,0.15), rgba(255,60,0,0.08));
+border:1px solid rgba(255,120,0,0.3);
+}
+
+.ai-title{
+font-weight:bold;
+color:#ff7a00;
+margin-bottom:8px;
+font-size:14px;
+}
+
+.ai-title::before{
+content:"";
+display:inline-block;
+width:8px;
+height:8px;
+background:#ff7a00;
+border-radius:50%;
+margin-right:6px;
+}
+
+.ai-text{font-size:15px;color:#eee;margin-bottom:8px;}
+.ai-confidence{font-size:12px;color:#aaa;}
+
+/* RESULT CARD */
+.result-card{
+margin-top:15px;
+padding:16px;
+border-radius:18px;
+background: linear-gradient(145deg, #0f0f0f, #1a1a1a);
+border:1px solid rgba(255,120,0,0.2);
+}
+
+.result-title{
+color:#ff7a00;
+font-weight:bold;
+margin-bottom:10px;
+font-size:14px;
+}
+
+.result-item{
+background:#111;
+padding:14px;
+border-radius:14px;
+margin-top:10px;
+font-size:16px;
+}
+
+.best{
+border:1px solid #ff7a00;
+}
+
+.footer{
+text-align:center;
+font-size:11px;
+color:#777;
+margin-top:12px;
+}
 </style>
 </head>
+
 <body>
+
 <div class="container">
 <div class="card">
-<div class="header">
-<h2>🚀 AI Pricing Tool</h2>
-<span>Smart logistics rate recommendation</span>
-</div>
+<div class="glow"></div>
 
-<label>Origin</label>
-<input id="origin" value="DXB">
-
-<label>Destination</label>
-<input id="destination" value="SIN">
-
-<button class="swap" onclick="swapRoute()">🔁 Swap Route</button>
+<h2>AI Pricing</h2>
 
 <label>Mode</label>
 <select id="mode">
@@ -45,73 +148,18 @@ button {margin-top:15px;padding:14px;width:100%;border:none;border-radius:12px;f
 <option>Sea</option>
 </select>
 
-<label>Weight (kg)</label>
-<input id="weight" type="number" value="150">
-
-<label>Volume (CBM)</label>
-<input id="volume" type="number" value="2.5">
+<div class="row">
+<div style="flex:1;">
+<label>Weight</label>
+<input id="weight" value="150">
+</div>
+<div style="flex:1;">
+<label>Volume</label>
+<input id="volume" value="2.5">
+</div>
+</div>
 
 <label>Lead Time</label>
-<input id="time" type="number" value="6">
+<input id="time" value="6">
 
-<button class="primary" onclick="calculate()">Generate AI Recommendation</button>
-
-<div id="result" class="result"></div>
-
-<div class="footer">Created by Arun</div>
-</div>
-</div>
-
-<script>
-function swapRoute(){
-let o=document.getElementById("origin");
-let d=document.getElementById("destination");
-[o.value,d.value]=[d.value,o.value];
-}
-
-function calculate(){
-let weight=parseFloat(document.getElementById("weight").value);
-let volume=parseFloat(document.getElementById("volume").value);
-let mode=document.getElementById("mode").value;
-let time=parseInt(document.getElementById("time").value);
-
-let baseRate= mode==="Air"?5:2;
-let price=(weight*baseRate)+(volume*50);
-
-if(time<5) price*=1.2;
-if(weight>200) price*=0.9;
-
-let carriers=[
-{name:"DHL Express",price:price},
-{name:"Emirates SkyCargo",price:price*0.95},
-{name:"Qatar Cargo",price:price*1.05}
-];
-
-carriers.sort((a,b)=>a.price-b.price);
-
-let recommendation = mode==="Air" 
-? "Recommended due to faster delivery and moderate weight."
-: "Sea is cost-efficient for this shipment profile.";
-
-let confidence = weight<200 && time>=5 ? "High" : "Medium";
-
-let html=`<div class="ai-box">
-🤖 AI Insight:<br>
-${recommendation}<br>
-Confidence: <b>${confidence}</b>
-</div>`;
-
-carriers.forEach((c,i)=>{
-html+=`
-<div class="result-card ${i===0?'best':''}">
-<b>${c.name}</b><br>
-$${c.price.toFixed(2)}
-${i===0?"<br><span style='color:green'>Best Option</span>":""}
-</div>`;
-});
-
-document.getElementById("result").innerHTML=html;
-}
-</script>
-</body>
-</html>
+<button
